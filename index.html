@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You 💖</title>
+
+  <style>
+    :root{
+      --pink1:#ff3399;
+      --pink2:#ff99cc;
+      --pink3:#ffd6ec;
+      --white:#ffffff;
+    }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(-45deg, #ffd6ec, #ffffff, #ffcce6, #fff0f6);
+      background-size: 400% 400%;
+      animation: gradientMove 10s ease infinite;
+    }
+
+    /* animated gradient */
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* screens */
+    .screen {
+      position: absolute;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.6s ease, transform 0.6s ease, filter 0.6s ease;
+      padding: 24px;
+      box-sizing: border-box;
+      z-index: 5;
+      transform: scale(1);
+      filter: blur(0px);
+    }
+
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96);
+      filter: blur(6px);
+    }
+
+    /* glowing title */
+    h1 {
+      font-size: clamp(28px, 4.2vw, 46px);
+      color: var(--pink1);
+      text-shadow:
+        0 0 10px #ff66b2,
+        0 0 20px #ff99cc,
+        0 0 40px #ff66b2;
+      animation: bounce 2s infinite;
+      text-align: center;
+      margin: 0 0 18px 0;
+      line-height: 1.08;
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* buttons */
+    button {
+      padding: 14px 32px;
+      margin: 12px;
+      font-size: clamp(16px, 2.2vw, 18px);
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: 0.2s ease;
+      box-shadow: 0 0 15px rgba(255,105,180,0.4);
+      max-width: min(92vw, 360px);
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    .primary {
+      background: var(--pink1);
+      color: white;
+    }
+
+    .secondary {
+      background: white;
+      color: var(--pink1);
+      border: 2px solid var(--pink1);
+      position: absolute;
+    }
+
+    /* sparkles */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkleAnim 2s linear infinite;
+      z-index: 2;
+      filter: blur(0.2px);
+    }
+
+    @keyframes sparkleAnim {
+      0% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.5); }
+    }
+
+    /* =============================
+       EXTRA DECORATIONS LAYER
+       ============================= */
+
+    /* soft floating hearts (big) */
+    .float-heart {
+      position: absolute;
+      font-size: 30px;
+      opacity: 0.35;
+      animation: floatUp 12s linear infinite;
+      z-index: 1;
+      user-select: none;
+      filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.25));
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) translateX(0) rotate(0deg); }
+      100% { transform: translateY(-30vh) translateX(40px) rotate(360deg); }
+    }
+
+    /* Minecraft-style pixel heart (CSS) */
+    .mc-heart {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      image-rendering: pixelated;
+      transform: scale(var(--s, 1));
+      opacity: var(--o, 1);
+      z-index: 2;
+      filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.25));
+      animation: mcFall var(--t, 9s) linear infinite;
+    }
+
+    /* 8-bit heart using box-shadow pixels */
+    .mc-heart::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow:
+        /* row 1 */
+        3px 0 var(--c, #ff3399), 6px 0 var(--c, #ff3399), 12px 0 var(--c, #ff3399), 15px 0 var(--c, #ff3399),
+        /* row 2 */
+        0 3px var(--c, #ff3399), 3px 3px var(--c, #ff3399), 6px 3px var(--c, #ff3399), 9px 3px var(--c, #ff3399), 12px 3px var(--c, #ff3399), 15px 3px var(--c, #ff3399), 18px 3px var(--c, #ff3399),
+        /* row 3 */
+        0 6px var(--c, #ff3399), 3px 6px var(--c, #ff3399), 6px 6px var(--c, #ff3399), 9px 6px var(--c, #ff3399), 12px 6px var(--c, #ff3399), 15px 6px var(--c, #ff3399), 18px 6px var(--c, #ff3399),
+        /* row 4 */
+        3px 9px var(--c, #ff3399), 6px 9px var(--c, #ff3399), 9px 9px var(--c, #ff3399), 12px 9px var(--c, #ff3399), 15px 9px var(--c, #ff3399),
+        /* row 5 */
+        6px 12px var(--c, #ff3399), 9px 12px var(--c, #ff3399), 12px 12px var(--c, #ff3399),
+        /* row 6 */
+        9px 15px var(--c, #ff3399);
+    }
+
+    @keyframes mcFall {
+      0% { transform: translateY(-60px) translateX(0) scale(var(--s, 1)) rotate(0deg); }
+      100% { transform: translateY(110vh) translateX(25px) scale(var(--s, 1)) rotate(360deg); }
+    }
+
+    /* pixel confetti squares */
+    .pixel-conf {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 1px;
+      image-rendering: pixelated;
+      z-index: 6;
+      animation: confFall var(--t, 4s) linear forwards;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
+    }
+
+    @keyframes confFall {
+      0% { transform: translateY(-40px) translateX(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) translateX(var(--drift, 30px)) rotate(720deg); opacity: 0.9; }
+    }
+
+    /* cute bottom strip so it never feels empty */
+    .bottom-strip {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 90px;
+      background: linear-gradient(to top, rgba(255, 51, 153, 0.12), rgba(255, 51, 153, 0));
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Minecraft HP bar (hidden until YES) */
+    .hp-bar{
+      position: fixed;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      z-index: 9;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .hp-bar.hidden{
+      opacity: 0;
+      transform: translateX(-50%) translateY(18px);
+      pointer-events: none;
+    }
+
+    .hp-inner{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.55);
+      border: 2px solid rgba(255, 51, 153, 0.35);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.10);
+      backdrop-filter: blur(8px);
+    }
+
+    .hp-label{
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #ff3399;
+      text-shadow: 0 0 10px rgba(255, 51, 153, 0.35);
+      font-size: 14px;
+    }
+
+    .hp-hearts{
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .hp-heart{
+      width: 22px;
+      height: 22px;
+      position: relative;
+      transform: scale(1);
+      animation: hpPop 0.55s ease both;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 10px rgba(255, 51, 153, 0.25));
+    }
+
+    @keyframes hpPop{
+      0%{ transform: scale(0.2) rotate(-10deg); opacity: 0; }
+      60%{ transform: scale(1.15) rotate(6deg); opacity: 1; }
+      100%{ transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* Pixel heart (bigger for HP) */
+    .hp-heart::before{
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 3px;
+      background: transparent;
+      box-shadow:
+        3px 0 var(--hc, #ff3399), 6px 0 var(--hc, #ff3399), 12px 0 var(--hc, #ff3399), 15px 0 var(--hc, #ff3399),
+        0 3px var(--hc, #ff3399), 3px 3px var(--hc, #ff3399), 6px 3px var(--hc, #ff3399), 9px 3px var(--hc, #ff3399), 12px 3px var(--hc, #ff3399), 15px 3px var(--hc, #ff3399), 18px 3px var(--hc, #ff3399),
+        0 6px var(--hc, #ff3399), 3px 6px var(--hc, #ff3399), 6px 6px var(--hc, #ff3399), 9px 6px var(--hc, #ff3399), 12px 6px var(--hc, #ff3399), 15px 6px var(--hc, #ff3399), 18px 6px var(--hc, #ff3399),
+        3px 9px var(--hc, #ff3399), 6px 9px var(--hc, #ff3399), 9px 9px var(--hc, #ff3399), 12px 9px var(--hc, #ff3399), 15px 9px var(--hc, #ff3399),
+        6px 12px var(--hc, #ff3399), 9px 12px var(--hc, #ff3399), 12px 12px var(--hc, #ff3399),
+        9px 15px var(--hc, #ff3399);
+    }
+
+    /* Minecraft-ish ground layer */
+    .ground{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 130px;
+      z-index: 4;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .ground-tile{
+      position: absolute;
+      bottom: 0;
+      width: 52px;
+      height: 52px;
+      image-rendering: pixelated;
+      opacity: 0.95;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.08));
+      animation: tileBob 3.2s ease-in-out infinite;
+    }
+
+    @keyframes tileBob{
+      0%,100%{ transform: translateY(0px); }
+      50%{ transform: translateY(-2px); }
+    }
+
+    /* a simple pixel tulip */
+    .tulip::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      width:4px;
+      height:4px;
+      box-shadow:
+        /* flower head */
+        20px 0 var(--petal,#ff3399),
+        16px 4px var(--petal,#ff3399), 20px 4px var(--petal,#ff3399), 24px 4px var(--petal,#ff3399),
+        16px 8px var(--petal,#ff3399), 20px 8px #ffffff, 24px 8px var(--petal,#ff3399),
+        20px 12px var(--petal,#ff3399),
+        /* stem */
+        20px 16px #44b85a,
+        20px 20px #44b85a,
+        20px 24px #44b85a,
+        20px 28px #44b85a,
+        /* leaves */
+        16px 22px #44b85a,
+        24px 24px #44b85a,
+        16px 26px #44b85a,
+        24px 28px #44b85a;
+    }
+
+    /* grass tuft */
+    .grass::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      width:4px;
+      height:4px;
+      box-shadow:
+        20px 8px #44b85a,
+        16px 12px #44b85a, 20px 12px #44b85a, 24px 12px #44b85a,
+        12px 16px #44b85a, 16px 16px #44b85a, 20px 16px #44b85a, 24px 16px #44b85a, 28px 16px #44b85a,
+        16px 20px #44b85a, 20px 20px #44b85a, 24px 20px #44b85a,
+        20px 24px #44b85a;
+    }
+
+    /* little pixel flowers at bottom */
+    .pixel-flower {
+      position: fixed;
+      bottom: 18px;
+      width: 18px;
+      height: 18px;
+      z-index: 3;
+      opacity: 0.55;
+      animation: flowerWiggle 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .pixel-flower::before {
+      content: "";
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      left: 0;
+      top: 0;
+      box-shadow:
+        6px 0 #ff99cc,
+        12px 6px #ff99cc,
+        6px 12px #ff99cc,
+        0 6px #ff99cc,
+        6px 6px #ffffff,
+        6px 9px #55cc66,
+        6px 12px #55cc66,
+        6px 15px #55cc66;
+    }
+
+    @keyframes flowerWiggle {
+      0%,100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    /* black sad screen */
+    #sadScreen {
+      background: black;
+      color: white;
+      font-size: 50px;
+      z-index: 10;
+    }
+
+    /* good ending */
+    #goodScreen h1 {
+      font-size: 45px;
+    }
+
+    .cat-container{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      max-width: 900px;
+    }
+
+    .cat-container img {
+      width: clamp(120px, 28vw, 180px);
+      margin: 0;
+      border-radius: 18px;
+      box-shadow: 0 0 20px rgba(255, 51, 153, 0.25);
+    }
+
+    /* make sure the "No" button starts near the other one */
+    #noBtn{
+      left: 50%;
+      top: 60%;
+      transform: translateX(90px);
+      max-width: min(44vw, 220px);
+      white-space: nowrap;
+    }
+
+    /* Pixel wipe overlay */
+    .pixel-wipe{
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: grid;
+      grid-template-columns: repeat(18, 1fr);
+      grid-template-rows: repeat(12, 1fr);
+      gap: 6px;
+      padding: 14px;
+      pointer-events: none;
+    }
+
+    .pixel-wipe.hidden{ display:none; }
+
+    .pixel-wipe .px{
+      background: #ff3399;
+      border-radius: 8px;
+      opacity: 0;
+      transform: scale(0.4);
+    }
+
+    /* Mobile layout tweaks */
+    @media (max-width: 520px){
+      .screen{ padding: 18px; }
+      #noBtn{ transform: translateX(72px); }
+      .hp-inner{ padding: 10px 12px; border-radius: 14px; }
+      .hp-heart{ width: 20px; height: 20px; }
+      .ground{ height: 120px; }
+      .bottom-strip{ height: 80px; }
+    }
+
+    /* accessibility: reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .pixel-wipe{ display:none !important; }
+    }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- pixel wipe transition overlay -->
+  <div id="pixelWipe" class="pixel-wipe hidden" aria-hidden="true"></div>
+
+  <!-- music (NOTE: mobile browsers often require a tap first) -->
+  <audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_4f4cde4f3a.mp3?filename=romantic-background-112192.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- DECOR layers -->
+  <div class="bottom-strip"></div>
+
+  <!-- Minecraft HP bar (shows after YES) -->
+  <div id="hpBar" class="hp-bar hidden" aria-hidden="true">
+    <div class="hp-inner">
+      <span class="hp-label">HP</span>
+      <div class="hp-hearts" id="hpHearts"></div>
+    </div>
+  </div>
+  <!-- Minecraft-ish ground layer (flowers + grass) -->
+  <div id="ground" class="ground" aria-hidden="true"></div>
+<!-- MAIN -->
+  <div id="mainScreen" class="screen">
+    <h1>will u perhaps be my Valentine.....?</h1>
+    <button class="primary" onclick="goConfirm()">Yes</button>
+    <button id="noBtn" class="secondary">No</button>
+  </div>
+
+  <!-- CONFIRM -->
+  <div id="confirmScreen" class="screen hidden">
+    <h1>are u sure u picked the right choice?</h1>
+    <button class="primary" onclick="goodEnding()">Yes</button>
+    <button class="secondary" onclick="badEnding()" style="position:relative;">No</button>
+  </div>
+
+  <!-- BAD -->
+  <div id="sadScreen" class="screen hidden">
+    awh :(
+  </div>
+
+  <!-- GOOD -->
+  <div id="goodScreen" class="screen hidden">
+    <h1>YAYAYAY, I LOVE YOUU. MWAA </h1>
+    <div class="cat-container">
+      <img alt="cat" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" />
+      <img alt="cat" src="https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif" />
+      <img alt="cat" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" />
+    </div>
+  </div>
+
+  <script>
+    // screens
+    const mainScreen = document.getElementById("mainScreen");
+    const confirmScreen = document.getElementById("confirmScreen");
+    const sadScreen = document.getElementById("sadScreen");
+    const goodScreen = document.getElementById("goodScreen");
+
+    const noBtn = document.getElementById("noBtn");
+    const bgm = document.getElementById("bgm");
+    const pixelWipe = document.getElementById("pixelWipe");
+
+    // try autoplay, then fallback to first click
+    (async () => {
+      try { await bgm.play(); } catch (e) {}
+    })();
+    window.addEventListener("pointerdown", () => {
+      if (bgm.paused) bgm.play().catch(()=>{});
+    }, { once: true });
+
+    /* vibrate */
+    function vibrate() {
+      if (navigator.vibrate) navigator.vibrate(120);
+    }
+
+    /* running no */
+    function moveNo() {
+      vibrate();
+      const maxX = window.innerWidth - noBtn.offsetWidth;
+      const maxY = window.innerHeight - noBtn.offsetHeight;
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
+    }
+
+    noBtn.addEventListener("mouseover", moveNo);
+    noBtn.addEventListener("click", moveNo);
+
+    /* screen switching */
+    function goConfirm() {
+      vibrate();
+      microBurst();
+      playPixelWipe(confirmScreen);
+    }
+
+    function badEnding() {
+      vibrate();
+      playPixelWipe(sadScreen);
+    }
+
+    function goodEnding() {
+      vibrate();
+      playPixelWipe(goodScreen);
+
+      // delayed so it happens AFTER the wipe reveal
+      setTimeout(() => {
+        startMinecraftConfetti();
+        burstMcHearts();
+        showHpBar();
+      }, 650);
+    }
+
+    /* =============================
+       EXTRA DECOR JS
+       ============================= */
+
+    // floating big emoji hearts
+    function spawnFloatHeart() {
+      const h = document.createElement("div");
+      h.className = "float-heart";
+      h.innerText = ["💗","💖","💕","💘","💝"][Math.floor(Math.random()*5)];
+      h.style.left = Math.random() * window.innerWidth + "px";
+      h.style.animationDuration = (10 + Math.random()*10) + "s";
+      h.style.fontSize = (20 + Math.random()*36) + "px";
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 22000);
+    }
+
+    // minecraft pixel hearts falling
+    function spawnMcHeart() {
+      const mc = document.createElement("div");
+      mc.className = "mc-heart";
+      mc.style.left = Math.random() * window.innerWidth + "px";
+      mc.style.setProperty("--t", (6 + Math.random()*10) + "s");
+      mc.style.setProperty("--s", (0.7 + Math.random()*1.7).toFixed(2));
+      mc.style.setProperty("--o", (0.35 + Math.random()*0.65).toFixed(2));
+      mc.style.setProperty(
+        "--c",
+        ["#ff3399", "#ff99cc", "#ffffff"][Math.floor(Math.random()*3)]
+      );
+      document.body.appendChild(mc);
+      setTimeout(() => mc.remove(), 18000);
+    }
+
+    // pixel flowers near bottom
+    function placeFlowers() {
+      // keep the old soft flowers too
+      for (let i = 0; i < 10; i++) {
+        const f = document.createElement("div");
+        f.className = "pixel-flower";
+        f.style.left = (i * (window.innerWidth / 10) + Math.random()*30) + "px";
+        f.style.bottom = (12 + Math.random()*22) + "px";
+        f.style.animationDelay = (Math.random()*2) + "s";
+        document.body.appendChild(f);
+      }
+    }
+
+    // Minecraft-ish ground: tulips + grass
+    const ground = document.getElementById("ground");
+
+    function buildGround(){
+      if (!ground) return;
+      ground.innerHTML = "";
+
+      const count = Math.ceil(window.innerWidth / 52) + 2;
+      for (let i = 0; i < count; i++){
+        const tile = document.createElement("div");
+        tile.className = "ground-tile";
+        tile.style.left = (i * 52 - 26) + "px";
+        tile.style.animationDelay = (Math.random()*1.6) + "s";
+
+        // choose tulip or grass
+        const isTulip = Math.random() < 0.55;
+        tile.classList.add(isTulip ? "tulip" : "grass");
+
+        // tulip colors (minecraft-ish)
+        if (isTulip){
+          const petals = ["#ff3399", "#ff99cc", "#ffffff", "#ff4d6d"]; // pink/white/red-ish
+          tile.style.setProperty("--petal", petals[Math.floor(Math.random()*petals.length)]);
+        }
+
+        // random scale for depth
+        const s = 0.85 + Math.random()*0.55;
+        tile.style.transform = `scale(${s})`;
+        tile.style.opacity = (0.75 + Math.random()*0.25).toFixed(2);
+
+        ground.appendChild(tile);
+      }
+    }
+
+    buildGround();
+    window.addEventListener("resize", buildGround);
+
+    // minecraft confetti squares
+    function startMinecraftConfetti() {
+      for (let i = 0; i < 220; i++) {
+        const conf = document.createElement("div");
+        conf.className = "pixel-conf";
+        conf.style.left = Math.random() * window.innerWidth + "px";
+        conf.style.top = (-30 - Math.random()*120) + "px";
+        conf.style.background = ["#ff3399", "#ff99cc", "#ffffff", "#ffd6ec"][Math.floor(Math.random()*4)];
+        conf.style.setProperty("--t", (2.6 + Math.random()*2.6) + "s");
+        conf.style.setProperty("--drift", ((-60 + Math.random()*120) | 0) + "px");
+        conf.style.width = (6 + Math.random()*10) + "px";
+        conf.style.height = conf.style.width;
+        document.body.appendChild(conf);
+        setTimeout(() => conf.remove(), 7000);
+      }
+    }
+
+    // burst of minecraft hearts on good ending
+    function burstMcHearts() {
+      for (let i = 0; i < 40; i++) {
+        setTimeout(() => {
+          const mc = document.createElement("div");
+          mc.className = "mc-heart";
+          mc.style.left = (window.innerWidth * 0.5 + (-140 + Math.random()*280)) + "px";
+          mc.style.setProperty("--t", (4 + Math.random()*4) + "s");
+          mc.style.setProperty("--s", (1.0 + Math.random()*2.2).toFixed(2));
+          mc.style.setProperty("--o", (0.65 + Math.random()*0.35).toFixed(2));
+          mc.style.setProperty(
+            "--c",
+            ["#ff3399", "#ff99cc", "#ffffff"][Math.floor(Math.random()*3)]
+          );
+          document.body.appendChild(mc);
+          setTimeout(() => mc.remove(), 9000);
+        }, i * 40);
+      }
+    }
+
+    // tiny burst when switching screens
+    function microBurst(){
+      for (let i = 0; i < 28; i++) {
+        setTimeout(() => {
+          const conf = document.createElement("div");
+          conf.className = "pixel-conf";
+          conf.style.left = (window.innerWidth * 0.5 + (-120 + Math.random()*240)) + "px";
+          conf.style.top = (window.innerHeight * 0.5 + (-80 + Math.random()*160)) + "px";
+          conf.style.background = ["#ff3399", "#ff99cc", "#ffffff", "#ffd6ec"][Math.floor(Math.random()*4)];
+          conf.style.setProperty("--t", (1.6 + Math.random()*1.4) + "s");
+          conf.style.setProperty("--drift", ((-80 + Math.random()*160) | 0) + "px");
+          conf.style.width = (6 + Math.random()*10) + "px";
+          conf.style.height = conf.style.width;
+          document.body.appendChild(conf);
+          setTimeout(() => conf.remove(), 2200);
+        }, i * 12);
+      }
+    }
+
+    // a lil whoosh/zoom when a screen appears
+    // pixel-wipe transition (Minecraft-ish)
+    function playPixelWipe(nextScreen){
+      if (!pixelWipe){
+        // fallback
+        document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+        nextScreen.classList.remove("hidden");
+        return;
+      }
+
+      pixelWipe.classList.remove("hidden");
+      pixelWipe.innerHTML = "";
+
+      // responsive grid (less blocks on mobile)
+      const isMobile = window.innerWidth < 520;
+      const cols = isMobile ? 12 : 18;
+      const rows = isMobile ? 10 : 12;
+      pixelWipe.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+      pixelWipe.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+      const total = cols * rows;
+
+      for (let i = 0; i < total; i++){
+        const p = document.createElement("div");
+        p.className = "px";
+        p.style.background = ["#ff3399", "#ff99cc", "#ffffff", "#ffd6ec"][Math.floor(Math.random()*4)];
+        pixelWipe.appendChild(p);
+      }
+
+      const pxs = [...pixelWipe.querySelectorAll(".px")];
+
+      // fill in
+      pxs.forEach((p, i) => {
+        setTimeout(() => {
+          p.style.opacity = "1";
+          p.style.transform = "scale(1)";
+          p.style.transition = "0.22s ease";
+        }, i * 6);
+      });
+
+      // swap screens mid-way
+      setTimeout(() => {
+        document.querySelectorAll(".screen").forEach(s => s.classList.add("hidden"));
+        nextScreen.classList.remove("hidden");
+      }, 520);
+
+      // clear out
+      setTimeout(() => {
+        pxs.reverse().forEach((p, i) => {
+          setTimeout(() => {
+            p.style.opacity = "0";
+            p.style.transform = "scale(0.4)";
+          }, i * 4);
+        });
+      }, 820);
+
+      setTimeout(() => {
+        pixelWipe.classList.add("hidden");
+      }, 1400);
+    }
+
+    // Minecraft HP bar (shows after YES) (shows after YES)
+    const hpBar = document.getElementById("hpBar");
+    const hpHearts = document.getElementById("hpHearts");
+
+    function showHpBar(){
+      hpHearts.innerHTML = "";
+      hpBar.classList.remove("hidden");
+
+      // 10 hearts like Minecraft
+      for (let i = 0; i < 10; i++){
+        const h = document.createElement("div");
+        h.className = "hp-heart";
+        h.style.setProperty("--hc", i < 10 ? "#ff3399" : "#ffffff");
+        h.style.animationDelay = (i * 60) + "ms";
+        hpHearts.appendChild(h);
+      }
+
+      // little sparkle around bar
+      for (let i = 0; i < 14; i++){
+        setTimeout(() => spawnSparkle(), i * 70);
+      }
+    }
+
+    // background loops
+    setInterval(spawnMcHeart, 260);
+    setInterval(spawnSparkle, 140);
+    setInterval(spawnFloatHeart, 900);
+
+    // initial decorations
+    placeFlowers();
+
+    // keep "No" button movable but not stuck offscreen on resize
+    window.addEventListener("resize", () => {
+      const maxX = window.innerWidth - noBtn.offsetWidth;
+      const maxY = window.innerHeight - noBtn.offsetHeight;
+      const left = parseFloat(noBtn.style.left || "0");
+      const top = parseFloat(noBtn.style.top || "0");
+      if (left > maxX) noBtn.style.left = maxX + "px";
+      if (top > maxY) noBtn.style.top = maxY + "px";
+    });
+  </script>
+</body>
+</html>
